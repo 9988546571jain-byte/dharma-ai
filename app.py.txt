@@ -1,0 +1,44 @@
+import streamlit as st
+from langchain_openai import ChatOpenAI
+from langchain.chains import RetrievalQA
+# Note: You will need your vectorstore logic from previous steps here
+
+# 1. Page Configuration (2026 Style)
+st.set_page_config(page_title="Dharma AI 2026", page_icon="☸️", layout="wide")
+
+# 2. Sidebar for Religion Selection
+with st.sidebar:
+    st.title("🙏 Interfaith Wisdom")
+    religion = st.selectbox(
+        "Choose a Dharma to focus on:",
+        ["All (Comparative)", "Hinduism", "Islam", "Christianity", "Sikhism", "Buddhism", "Jainism"]
+    )
+    st.info("This AI uses verified sacred texts to provide accurate spiritual guidance.")
+
+st.title("🕉️ Dharma AI: Global Interfaith Assistant")
+st.markdown(f"Currently exploring: **{religion}**")
+
+# 3. Chat Interface
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat history
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Chat Input
+if prompt := st.chat_input("Ask a spiritual question..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    # 4. Generate AI Response (RAG Logic)
+    with st.chat_message("assistant"):
+        # This replaces the dharma_ai.invoke() from earlier
+        # response = dharma_ai.invoke(prompt) 
+        # result = response["result"]
+        result = f"In 2026, the Dharma AI would analyze {religion} texts to answer: '{prompt}'"
+        st.markdown(result)
+        
+    st.session_state.messages.append({"role": "assistant", "content": result})
